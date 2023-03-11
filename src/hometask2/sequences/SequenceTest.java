@@ -14,7 +14,7 @@ public class SequenceTest {
     static int N_BOUND = 10; // Верхняя граница числа для рандомайзера
     static Random rnd = new Random(System.currentTimeMillis()); // Рандомайзер для аргумента проверяемых методов
     static int n = rnd.nextInt(N_BOUND); // Проверочное число элементов последовательности от 0 до 9.
-                                         // 0 оставляем намеренно для проверки соответсвующего случая
+                                         // 0 оставляем намеренно для проверки соответствующего случая
 
     public static void main(String[] args) {
         // Создадим новый объект SequenceImpl, реализуеющий интерфейс SequenceGenerator

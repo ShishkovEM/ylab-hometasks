@@ -1,5 +1,5 @@
 package hometask2.ratelimitedprinter;
 
-public interface RatedLimitedPrintable {
+public interface Printer {
     void print(String message);
 }

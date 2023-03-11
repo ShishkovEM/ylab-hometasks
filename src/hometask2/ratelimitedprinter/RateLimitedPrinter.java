@@ -11,7 +11,7 @@ package hometask2.ratelimitedprinter;
  * консоль. Другими словами, сообщение не будет выводится чаще чем 1 раз в interval
  * милисекунд. Реализовать описанный класс.
  */
-public class RateLimitedPrinter implements RatedLimitedPrintable {
+public class RateLimitedPrinter implements Printer {
     int interval; // Интервал
     long lastCallTime; // Время последнего вывода в консоль
 

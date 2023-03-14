@@ -7,6 +7,7 @@ public class SnilsValidatorTest {
     static String invalidSnils1 = "88724516352";
     static String invalidSnils2 = "171-468-184-37";
     static String invalidSnils3 = "682-593-064 73";
+    static String invalidSnils4 = "1 2 3 4 5";
 
     public static void main(String[] args) {
         SnilsValidator snilsValidator = new SnilsValidatorImpl();
@@ -27,6 +28,9 @@ public class SnilsValidatorTest {
         System.out.println("----------");
         System.out.println("Валидация СНИЛС " + invalidSnils3 + ":");
         System.out.println(snilsValidator.validate(invalidSnils3));
+        System.out.println("----------");
+        System.out.println("Валидация СНИЛС " + invalidSnils4 + ":");
+        System.out.println(snilsValidator.validate(invalidSnils4));
         System.out.println("----------");
     }
 }

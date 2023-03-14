@@ -17,7 +17,7 @@ public class SequenceTest {
                                          // 0 оставляем намеренно для проверки соответствующего случая
 
     public static void main(String[] args) {
-        // Создадим новый объект SequenceImpl, реализуеющий интерфейс SequenceGenerator
+        // Создадим новый объект SequenceImpl, реализующий интерфейс SequenceGenerator
         SequenceGenerator sequenceGenerator = new SequenceImpl();
 
         // Сформируем массив из методов объекта sequenceGenerator

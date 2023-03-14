@@ -16,16 +16,7 @@ public class SnilsValidatorImpl implements SnilsValidator {
     @Override
     public boolean validate(String snils) {
 
-        /*
-        Проверяем, что введённый СНИЛС соответствует одному из паттернов:
-        XXXXXXXXXXX — маска ввода без разделителей.
-        XXX-XXX-XXX-XX — маска ввода с разделителями.
-        XXX-XXX-XXX XX — маска ввода с разделителями и с отделением контрольного числа.
-         */
-        boolean isLegalSequence = snils.matches("^\\d{3}-\\d{3}-\\d{3} \\d{2}$") ||
-                                  snils.matches("^\\d{3}-\\d{3}-\\d{3}-\\d{2}$") ||
-                                  snils.matches("^\\d{11}$");
-        if (!isLegalSequence) {
+        if (!this.validateMask(snils)) {
             return false;
         }
 
@@ -42,20 +33,29 @@ public class SnilsValidatorImpl implements SnilsValidator {
         int lastTwoDigits = Integer.parseInt(String.valueOf(snils.charAt(9)).concat(String.valueOf(snils.charAt(10))));
 
         // Делаем проверки по п.2 задания
-        if (controlSum < 100 && controlSum != lastTwoDigits) {
-            return false;
-        } else if (controlSum == 100 && lastTwoDigits != 0) {
-            return false;
-        } else {
-            if (controlSum % 101 == 100 && lastTwoDigits != 0) {
-                return false;
-            } else if (controlSum % 101 != 100 && lastTwoDigits != controlSum % 101) {
-                return false;
+        if (controlSum == 100) {
+            controlSum = 0;
+        } else if (controlSum > 100) {
+            if (controlSum % 101 == 100) {
+                controlSum = 0;
+            } else {
+                controlSum = controlSum % 101;
             }
         }
 
-        // В случае, если предыдущие проверки пройдены, из метода возвращается true
-        return true;
+        return controlSum == lastTwoDigits;
+    }
+
+    /**
+     * Проверяем, что введённый СНИЛС соответствует одному из паттернов:
+     * XXXXXXXXXXX — маска ввода без разделителей.
+     * XXX-XXX-XXX-XX — маска ввода с разделителями.
+     * XXX-XXX-XXX XX — маска ввода с разделителями и с отделением контрольного числа.
+     */
+    boolean validateMask(String snils) {
+        return snils.matches("^\\d{3}-\\d{3}-\\d{3} \\d{2}$") ||
+               snils.matches("^\\d{3}-\\d{3}-\\d{3}-\\d{2}$") ||
+               snils.matches("^\\d{11}$");
     }
 
 }

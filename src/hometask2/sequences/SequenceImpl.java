@@ -92,18 +92,17 @@ public class SequenceImpl implements SequenceGenerator {
 
     @Override
     public void j(int n) {
+
         if (n == 1) {
             System.out.println(1);
         } else if (n == 2) {
-            System.out.println(1);
-            System.out.println(1);
+            System.out.println(1 + System.lineSeparator() + 1);
         } else if (n >= 3) {
             int prePrevious = 1;
             int previous = 1;
             int current;
 
-            System.out.println(1);
-            System.out.println(1);
+            System.out.println(1 + System.lineSeparator() + 1);
 
             for (int i = 3; i <= n; i++) {
                 current = prePrevious + previous;

@@ -8,15 +8,15 @@ public class TransliteratorImpl implements Transliterator {
         StringBuilder stringBuilder = new StringBuilder();
 
         for (int i = 0; i < source.length(); i++) {
-            char currentKey = source.charAt(i);
-            if (this.dictionary.containsKey(currentKey)) {
+            char currentChar = source.charAt(i);
+            if (this.dictionary.containsKey(currentChar)) {
                 stringBuilder.append(
                         this.dictionary.getValue(
-                                currentKey
+                                currentChar
                         )
                 );
             } else {
-                stringBuilder.append(currentKey);
+                stringBuilder.append(currentChar);
             }
         }
 

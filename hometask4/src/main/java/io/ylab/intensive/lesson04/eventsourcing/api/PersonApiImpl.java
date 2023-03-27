@@ -38,7 +38,12 @@ public class PersonApiImpl implements PersonApi {
   private static final String DELETE_PERSON = "DELETE_PERSON";
   private static final String FIND_PERSON = "FIND_PERSON";
   private static final String FIND_ALL = "FIND_ALL";
-  private static final String QUEUE_NAME = "person_queue";
+  private static final String DELETE_QUEUE_NAME = "delete_person_queue";
+  private static final String SAVE_QUEUE_NAME = "save_person_queue";
+  private static final String FIND_QUERY_QUEUE_NAME = "find_person_queue";
+  private static final String FIND_RESPONSE_QUEUE_NAME = "find_response_person_queue";
+  private static final String FINDALL_QUERY_QUEUE_NAME = "findall_person_queue";
+  private static final String FINDALL_RESPONSE_QUEUE_NAME = "findall_response_person_queue";
 
   private final ConnectionFactory connectionFactory;
 
@@ -50,9 +55,9 @@ public class PersonApiImpl implements PersonApi {
   public void deletePerson(Long personId) {
     try (Connection connection = connectionFactory.newConnection();
          Channel channel = connection.createChannel()) {
-      channel.queueDeclare(QUEUE_NAME, false, false, false, null);
+      channel.queueDeclare(DELETE_QUEUE_NAME, false, false, false, null);
       String message = DELETE_PERSON + "," + personId.toString();
-      channel.basicPublish("", QUEUE_NAME, null, message.getBytes("UTF-8"));
+      channel.basicPublish("", DELETE_QUEUE_NAME, null, message.getBytes("UTF-8"));
       System.out.println(" [x] Sent '" + message + "'");
     } catch (IOException | TimeoutException e) {
       System.out.println("Error while sending delete person message: " + e.getMessage());
@@ -63,9 +68,9 @@ public class PersonApiImpl implements PersonApi {
   public void savePerson(Long personId, String firstName, String lastName, String middleName) {
     try (Connection connection = connectionFactory.newConnection();
          Channel channel = connection.createChannel()) {
-      channel.queueDeclare(QUEUE_NAME, false, false, false, null);
+      channel.queueDeclare(SAVE_QUEUE_NAME, false, false, false, null);
       String message = SAVE_PERSON + "," + personId.toString() + "," + firstName + "," + lastName + "," + middleName;
-      channel.basicPublish("", QUEUE_NAME, null, message.getBytes("UTF-8"));
+      channel.basicPublish("", SAVE_QUEUE_NAME, null, message.getBytes("UTF-8"));
       System.out.println(" [x] Sent '" + message + "'");
     } catch (IOException | TimeoutException e) {
       System.out.println("Error while sending save person message: " + e.getMessage());
@@ -76,12 +81,12 @@ public class PersonApiImpl implements PersonApi {
   public Person findPerson(Long personId) {
     try (Connection connection = connectionFactory.newConnection();
          Channel channel = connection.createChannel()) {
-      channel.queueDeclare(QUEUE_NAME, false, false, false, null);
+      channel.queueDeclare(FIND_QUERY_QUEUE_NAME, false, false, false, null);
       String message = FIND_PERSON + "," + personId.toString();
-      channel.basicPublish("", QUEUE_NAME, null, message.getBytes("UTF-8"));
+      channel.basicPublish("", FIND_QUERY_QUEUE_NAME, null, message.getBytes("UTF-8"));
       System.out.println(" [x] Sent '" + message + "'");
 
-      GetResponse response = channel.basicGet(QUEUE_NAME, true);
+      GetResponse response = channel.basicGet(FIND_RESPONSE_QUEUE_NAME, true);
       if (response == null) {
         return null;
       }
@@ -108,11 +113,11 @@ public class PersonApiImpl implements PersonApi {
   public List<Person> findAll() {
     try (Connection connection = connectionFactory.newConnection();
          Channel channel = connection.createChannel()) {
-      channel.queueDeclare(QUEUE_NAME, false, false, false, null);
+      channel.queueDeclare(FINDALL_QUERY_QUEUE_NAME, false, false, false, null);
       String message = FIND_ALL;
-      channel.basicPublish("", QUEUE_NAME, null, message.getBytes("UTF-8"));
+      channel.basicPublish("", FINDALL_QUERY_QUEUE_NAME, null, message.getBytes("UTF-8"));
       System.out.println(" [x] Sent '" + message + "'");
-      GetResponse response = channel.basicGet(QUEUE_NAME, true);
+      GetResponse response = channel.basicGet(FINDALL_RESPONSE_QUEUE_NAME, true);
       if (response == null) {
         System.out.println("No response received");
         return Collections.emptyList();

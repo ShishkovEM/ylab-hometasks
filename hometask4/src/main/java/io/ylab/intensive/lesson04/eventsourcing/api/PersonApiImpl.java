@@ -3,10 +3,12 @@ package io.ylab.intensive.lesson04.eventsourcing.api;
 import java.util.List;
 
 import io.ylab.intensive.lesson04.eventsourcing.Person;
-import io.ylab.intensive.lesson04.eventsourcing.PersonDAO;
+import io.ylab.intensive.lesson04.eventsourcing.PersonDAOPostgres;
+import io.ylab.intensive.lesson04.eventsourcing.PersonMessageProducer;
 
 /**
- * Формат сообщений:
+ * Формат сообщений для брокера (методы: deletePerson(Long personId) и
+ * savePerson(Long personId, String firstName, String lastName, String middleName)):
  *
  * Для сохранения данных о персоне:
  * Тип сообщения: "SAVE_PERSON"
@@ -17,29 +19,31 @@ import io.ylab.intensive.lesson04.eventsourcing.PersonDAO;
  * Содержимое сообщения: personId
  */
 public class PersonApiImpl implements PersonApi {
-  private final PersonDAO personDAO;
+  private final PersonMessageProducer personMessageProducer;
+  private final PersonDAOPostgres personDAOPostgres;
 
-  public PersonApiImpl(PersonDAO personDAO) {
-    this.personDAO = personDAO;
+  public PersonApiImpl(PersonMessageProducer personMessageProducer, PersonDAOPostgres personDAOPostgres) {
+    this.personMessageProducer = personMessageProducer;
+    this.personDAOPostgres = personDAOPostgres;
   }
 
   @Override
   public void deletePerson(Long personId) {
-    personDAO.deletePerson(personId);
+    personMessageProducer.deletePerson(personId);
   }
 
   @Override
   public void savePerson(Long personId, String firstName, String lastName, String middleName) {
-    personDAO.savePerson(personId, firstName, lastName, middleName);
+    personMessageProducer.savePerson(personId, firstName, lastName, middleName);
   }
 
   @Override
   public Person findPerson(Long personId) {
-    return personDAO.findPerson(personId);
+    return personDAOPostgres.findPerson(personId);
   }
 
   @Override
   public List<Person> findAll() {
-    return personDAO.findAll();
+    return personDAOPostgres.findAll();
   }
 }

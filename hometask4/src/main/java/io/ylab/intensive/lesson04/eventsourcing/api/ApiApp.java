@@ -50,6 +50,8 @@ public class ApiApp {
     // Save person with id 3
     personApi.savePerson(3L, "Petrov", "Petr", "Pertrovich"); // ApiApp <-- [x] Sent 'SAVE_PERSON,3,Petrov,Petr,Petrovich'
 
+    Thread.sleep(100);
+
     // Find person with id 3
     System.out.println(personApi.findPerson(3L)); // Person{id=3, name='Petrov', lastName='Petr', middleName='Pertrovich'}
   }

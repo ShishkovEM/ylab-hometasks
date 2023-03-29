@@ -7,7 +7,7 @@ import java.sql.Types;
 import java.util.Objects;
 
 public class MovieDAO {
-    private Connection connection;
+    private final Connection connection;
 
     public MovieDAO(Connection connection) {
         this.connection = connection;
@@ -17,61 +17,41 @@ public class MovieDAO {
         try (PreparedStatement query = connection.prepareStatement(
                 "INSERT INTO movie (year, length, title, subject, actors, actress, director, popularity, awards) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)"
         )) {
-            if (Objects.equals(movie.getYear(), null)) {
-                query.setNull(1, Types.INTEGER);
-            } else {
-                query.setInt(1, movie.getYear());
-            }
-
-            if (Objects.equals(movie.getLength(), null)) {
-                query.setNull(2, Types.INTEGER);
-            } else  {
-                query.setInt(2, movie.getLength());
-            }
-
-            if (Objects.equals(movie.getTitle(), null)) {
-                query.setNull(3, Types.VARCHAR);
-            } else  {
-                query.setString(3, movie.getTitle());
-            }
-
-            if (Objects.equals(movie.getSubject(), null)) {
-                query.setNull(4, Types.VARCHAR);
-            } else  {
-                query.setString(4, movie.getSubject());
-            }
-
-            if (Objects.equals(movie.getActors(), null)) {
-                query.setNull(5, Types.VARCHAR);
-            } else  {
-                query.setString(5, movie.getActors());
-            }
-
-            if (Objects.equals(movie.getActress(), null)) {
-                query.setNull(6, Types.VARCHAR);
-            } else  {
-                query.setString(6, movie.getActress());
-            }
-
-            if (Objects.equals(movie.getDirector(), null)) {
-                query.setNull(7, Types.VARCHAR);
-            } else  {
-                query.setString(7, movie.getDirector());
-            }
-
-            if (Objects.equals(movie.getPopularity(), null)) {
-                query.setNull(8, Types.INTEGER);
-            } else  {
-                query.setInt(8, movie.getPopularity());
-            }
-
-            if (Objects.equals(movie.getAwards(), null)) {
-                query.setNull(9, Types.BOOLEAN);
-            } else  {
-                query.setBoolean(9, movie.getAwards());
-            }
+            setOrInteger(movie.getYear(), query, 1);
+            setOrInteger(movie.getLength(), query, 2);
+            setOrVarchar(movie.getTitle(), query, 3);
+            setOrVarchar(movie.getSubject(), query, 4);
+            setOrVarchar(movie.getActors(), query, 5);
+            setOrVarchar(movie.getActress(), query, 6);
+            setOrVarchar(movie.getDirector(), query, 7);
+            setOrInteger(movie.getPopularity(), query, 8);
+            setOrBoolean(movie.getAwards(), query, 9);
 
             query.execute();
+        }
+    }
+
+    public void setOrInteger(Integer integerValueToSet, PreparedStatement query, int parameterIndex) throws SQLException {
+        if (Objects.equals(integerValueToSet, null)) {
+            query.setNull(parameterIndex, Types.INTEGER);
+        } else  {
+            query.setInt(parameterIndex, integerValueToSet);
+        }
+    }
+
+    public void setOrVarchar(String stringValueToSet, PreparedStatement query, int parameterIndex) throws SQLException {
+        if (Objects.equals(stringValueToSet, null)) {
+            query.setNull(parameterIndex, Types.INTEGER);
+        } else  {
+            query.setString(parameterIndex, stringValueToSet);
+        }
+    }
+
+    public void setOrBoolean(Boolean booleanValueToSet, PreparedStatement query, int parameterIndex) throws SQLException {
+        if (Objects.equals(booleanValueToSet, null)) {
+            query.setNull(parameterIndex, Types.BOOLEAN);
+        } else  {
+            query.setBoolean(parameterIndex, booleanValueToSet);
         }
     }
 }

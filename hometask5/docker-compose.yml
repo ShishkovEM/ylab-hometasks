@@ -1,0 +1,33 @@
+#docker-compose up  - terminal
+version: "3.9"
+services:
+  rabbitmq:
+    image: rabbitmq:3.10.7-management
+    hostname: rabbitmq
+    restart: always
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+  postgres:
+    container_name: postgresHometask4
+    image: postgres:15.1-alpine
+    environment:
+      POSTGRES_DB: "postges"
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "postgres"
+    ports:
+      - "5432:5432"
+    #    healthcheck:
+    #      test: ["CMD-SHELL", "pg_isready -U habrpguser -d habrdb"]
+    #      interval: 10s
+    #      timeout: 5s
+    #      retries: 5
+    #      start_period: 10s
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 4G
+#    networks:
+#      - postgres

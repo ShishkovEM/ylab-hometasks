@@ -5,6 +5,7 @@ import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.DefaultConsumer;
 import com.rabbitmq.client.Envelope;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -18,7 +19,7 @@ public class MessageConsumer extends DefaultConsumer {
     private final MessageProducer messageProducer;
 
     @Autowired
-    public MessageConsumer(Channel channel, String inputQueue, BadWordsRepository badWordsRepository, MessageProducer messageProducer) {
+    public MessageConsumer(@Qualifier("messageFilter") Channel channel, String inputQueue, BadWordsRepository badWordsRepository, MessageProducer messageProducer) {
         super(channel);
         this.channel = channel;
         this.inputQueue = inputQueue;

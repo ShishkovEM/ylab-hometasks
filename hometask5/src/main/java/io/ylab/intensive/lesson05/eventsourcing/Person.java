@@ -1,5 +1,8 @@
 package io.ylab.intensive.lesson05.eventsourcing;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class Person {
   private Long id;
   private String name;
@@ -46,5 +49,15 @@ public class Person {
 
   public void setMiddleName(String middleName) {
     this.middleName = middleName;
+  }
+
+  @Override
+  public String toString() {
+    return "Person{" +
+            "id=" + id +
+            ", name='" + name + '\'' +
+            ", lastName='" + lastName + '\'' +
+            ", middleName='" + middleName + '\'' +
+            '}';
   }
 }

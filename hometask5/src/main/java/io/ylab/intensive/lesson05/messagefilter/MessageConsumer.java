@@ -32,16 +32,10 @@ public class MessageConsumer extends DefaultConsumer {
         String message = new String(body, StandardCharsets.UTF_8);
         System.out.println(" [x] Received '" + message + "'");
         String filteredMessage = message;
-        String[] originalMessage = message.split("[ ,.;!?\\n\\r]");
-        String[] messageInLowerCase = new String[originalMessage.length];
 
-        for (int i = 0; i < originalMessage.length; i++) {
-            messageInLowerCase[i] = originalMessage[i].toLowerCase();
-        }
-
-        for (int i = 0; i < messageInLowerCase.length; i++) {
-            if (badWordsRepository.wordExists(messageInLowerCase[i])) {
-                filteredMessage = filteredMessage.replace(originalMessage[i], filterWord(originalMessage[i]));
+        for (String word : message.split("[ ,.;!?\\n\\r]")) {
+            if (badWordsRepository.wordExists(word.toLowerCase())) {
+                filteredMessage = filteredMessage.replace(word, filterWord(word));
             }
         }
 
@@ -49,7 +43,7 @@ public class MessageConsumer extends DefaultConsumer {
         getChannel().basicAck(envelope.getDeliveryTag(), false);
     }
 
-    public void listenQueue() throws IOException, InterruptedException {
+    public void listenAndServe() throws IOException, InterruptedException {
         this.channel.basicConsume(inputQueue, false, this);
         while (true) {
             Thread.sleep(1000);

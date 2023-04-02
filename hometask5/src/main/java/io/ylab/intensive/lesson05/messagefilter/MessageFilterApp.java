@@ -16,7 +16,7 @@ public class MessageFilterApp {
 
     MessageConsumer messageConsumer = applicationContext.getBean(MessageConsumer.class);
     try {
-      messageConsumer.listenQueue();
+      messageConsumer.listenAndServe();
     } catch (IOException | InterruptedException e) {
       throw new RuntimeException(e);
     }

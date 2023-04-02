@@ -13,12 +13,13 @@ import java.util.List;
 
 @Component
 public class SQLQueryBuilderImpl implements SQLQueryBuilder {
+    private final String[] typesToShow;
+    private final DataSource dataSource;
 
-   private final DataSource dataSource;
-
-   @Autowired
-   public SQLQueryBuilderImpl(DataSource dataSource) {
-       this.dataSource = dataSource;
+    @Autowired
+    public SQLQueryBuilderImpl(String[] typesToShow, DataSource dataSource) {
+        this.typesToShow = typesToShow;
+        this.dataSource = dataSource;
    }
 
     @Override
@@ -48,7 +49,7 @@ public class SQLQueryBuilderImpl implements SQLQueryBuilder {
         List<String> tables = new ArrayList<>();
         try (Connection conn = dataSource.getConnection()) {
             DatabaseMetaData metaData = conn.getMetaData();
-            ResultSet rs = metaData.getTables(null, null, null, new String[] {"TABLE"});
+            ResultSet rs = metaData.getTables(null, null, null, typesToShow);
             while (rs.next()) {
                 tables.add(rs.getString("TABLE_NAME"));
             }
@@ -59,9 +60,12 @@ public class SQLQueryBuilderImpl implements SQLQueryBuilder {
     }
 
     private boolean tableExists(Connection conn, String tableName) throws SQLException {
+        boolean result;
         DatabaseMetaData metaData = conn.getMetaData();
         ResultSet rs = metaData.getTables(null, null, tableName, null);
-        return rs.next();
+        result = rs.next();
+        rs.close();
+        return result;
     }
 
     private List<String> getColumns(Connection conn, String tableName) throws SQLException {
@@ -71,6 +75,7 @@ public class SQLQueryBuilderImpl implements SQLQueryBuilder {
         while (rs.next()) {
             columns.add(rs.getString("COLUMN_NAME"));
         }
+        rs.close();
         return columns;
     }
 }

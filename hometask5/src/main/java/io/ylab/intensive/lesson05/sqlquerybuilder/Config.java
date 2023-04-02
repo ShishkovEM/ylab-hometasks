@@ -3,6 +3,7 @@ package io.ylab.intensive.lesson05.sqlquerybuilder;
 import javax.sql.DataSource;
 
 import org.postgresql.ds.PGSimpleDataSource;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -12,6 +13,7 @@ import org.springframework.context.annotation.Configuration;
 public class Config {
   
   @Bean
+  @Qualifier("QueryExtender")
   public DataSource dataSource() {
     PGSimpleDataSource dataSource = new PGSimpleDataSource();
     dataSource.setServerName("localhost");
@@ -20,5 +22,11 @@ public class Config {
     dataSource.setDatabaseName("postgres");
     dataSource.setPortNumber(5432);
     return dataSource;
+  }
+
+  @Bean
+  @Qualifier("QueryExtender")
+  public String[] typesToShow() {
+    return new String[] {"TABLE", "VIEW"};
   }
 }
